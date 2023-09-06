@@ -1,3 +1,4 @@
+import 'package:firstbd233/view/liste_favorites.dart';
 import 'package:firstbd233/view/liste_personne.dart';
 import 'package:firstbd233/view/my_background.dart';
 import 'package:firstbd233/view/my_carte.dart';
@@ -30,43 +31,36 @@ class _MyDashBordState extends State<MyDashBord> {
       extendBodyBehindAppBar: true,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: indexPage,
-        onTap: (index){
+        onTap: (index) {
           setState(() {
             indexPage = index;
           });
-
         },
         items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: "Carte"
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: "Personnes"
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.favorite),
-              label: "Favoris"
-          ),
-
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.map),
+          //   label: "Carte"
+          // ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Personnes"),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: "Favoris"),
         ],
       ),
       body: Stack(
-        children: [
-          MyBackGroundPage(),
-          bodyPage()
-        ],
+        children: [MyBackGroundPage(), bodyPage()],
       ),
     );
   }
 
-  Widget bodyPage(){
-    switch(indexPage){
-      case 0 : return MyCarte();
-      case 1 : return ListPersonne();
-      case 2 : return Center(child: Text("Afficher favoris"));
-      default : return Text("Erreur");
+  Widget bodyPage() {
+    switch (indexPage) {
+      case 0:
+        return ListPersonne();
+      case 1:
+        return ListFavorites();
+      case 2:
+        return Center(child: Text("Afficher favoris"));
+      default:
+        return Text("Erreur");
     }
   }
 }

@@ -9,9 +9,10 @@ class MyUser {
   String? avatar;
   DateTime? birthday;
   late Genre genre;
+  late List<String> favorites = [];
+  final cloud_users = FirebaseFirestore.instance.collection("UTILISATEURS");
 
-
-  MyUser(){
+  MyUser() {
     uid = "";
     nom = "";
     prenom = "";
@@ -19,22 +20,20 @@ class MyUser {
     genre = Genre.autres;
   }
 
-
-  MyUser.bdd(DocumentSnapshot snapshot){
+  MyUser.bdd(DocumentSnapshot snapshot) {
     uid = snapshot.id;
-    Map<String,dynamic> map = snapshot.data() as Map<String,dynamic>;
+    Map<String, dynamic> map = snapshot.data() as Map<String, dynamic>;
     nom = map["NOM"];
     prenom = map["PRENOM"];
     email = map["EMAIL"];
-    avatar = map["AVATAR"]??defaultImage;
+    avatar = map["AVATAR"] ?? defaultImage;
     Timestamp? timestamp = map["BIRTHDAY"];
-    if(timestamp == null){
+    if (timestamp == null) {
       birthday = DateTime.now();
+    } else {
+      birthday = timestamp.toDate();
     }
-    else
-      {
-        birthday = timestamp.toDate();
-      }
+    favorites = (map["favorites"] as List<dynamic>?)?.cast<String>() ?? [];
   }
 
   //méthode
@@ -42,5 +41,30 @@ class MyUser {
     return prenom + " " + nom;
   }
 
+//pour ajouter un email à la liste des favoris.
+  void addToFavorites(String favoriteEmail) {
+    if (!favorites.contains(favoriteEmail)) {
+      favorites.add(favoriteEmail);
+      updateFavoritesFirestore();
+    }
+  }
 
+//pour supprimer un email de la liste des favoris.
+  void removeFromFavorites(String favoriteEmail) {
+    if (favorites.contains(favoriteEmail)) {
+      favorites.remove(favoriteEmail);
+      updateFavoritesFirestore();
+    }
+  }
+
+//pour update la base de données
+  void updateFavoritesFirestore() {
+    cloud_users.doc(uid).update({
+      'favorites': favorites,
+    }).then((_) {
+      print('bravo');
+    }).catchError((error) {
+      print('fail: $error');
+    });
+  }
 }

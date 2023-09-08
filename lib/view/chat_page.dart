@@ -22,9 +22,33 @@ class _ChatPageState extends State<ChatPage> {
       children: [
         Stack(
           children: [
+            Column(
+              children: [
+                SizedBox(height: 120),
+                Stack(
+                  children: [
+                    ViewAllChats(),
+                    Container(
+                        // color: Colors.pink,
+                        padding: EdgeInsets.only(
+                          left: 16,
+                        ),
+                        alignment: Alignment.bottomLeft,
+                        width: 300,
+                        height: 145,
+                        child: Text("Mes rooms",
+                            style: TextStyle(
+                                color: const Color.fromARGB(255, 61, 61, 61),
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold))),
+                  ],
+                ),
+              ],
+            ),
             Container(
+              color: Color.fromARGB(255, 226, 186, 255),
               padding: EdgeInsets.only(left: 10, top: 120),
-              height: 400,
+              height: 230,
               child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseHelper().cloud_users.snapshots(),
                 builder: ((context, snap) {
@@ -43,25 +67,15 @@ class _ChatPageState extends State<ChatPage> {
                         GestureDetector(
                           onTap: () {
                             print("clicked");
-                            ChatHelper().sendChat("woIaXlVjOWwe1Q5vCKTP",
-                                "how can you do this to me...");
+                            ChatHelper().sendChat(
+                                "hsshFfqedQWaj2laz3H9q9Ypal72",
+                                "she doesn't want to reply");
                             setState(() {});
                           },
-                          child: Container(
-                            alignment: Alignment.topLeft,
-                            height: 100,
-                            width: 80,
-                            child: CircleAvatar(
-                              radius: 40,
-                              backgroundColor:
-                                  const Color.fromARGB(255, 231, 231, 231),
-                              child: Center(child: Icon(Icons.chat_sharp)),
-                            ),
-                          ),
                         ),
                         Row(
                           children: [
-                            SizedBox(width: 90),
+                            SizedBox(width: 30),
                             Expanded(
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
@@ -113,18 +127,30 @@ class _ChatPageState extends State<ChatPage> {
                 }),
               ),
             ),
+            Container(
+              width: MediaQuery.of(context).size.height * 0.45,
+
+              alignment: Alignment.centerRight,
+              height: 190,
+              child: Icon(Icons.chat_sharp,
+                  size: 30, color: Color.fromARGB(255, 40, 8, 48)),
+              // child: CircleAvatar(
+              //   radius: 40,
+              //   backgroundColor: Color.fromARGB(255, 255, 255, 255),
+              //   child: Center(child: Icon(Icons.chat_sharp)),
+              // ),
+            ),
             Column(
               children: [
                 SizedBox(height: 220),
                 Divider(
                   thickness: 0.5,
-                  color: Color.fromARGB(255, 143, 143, 143),
+                  color: Color.fromARGB(255, 197, 113, 230),
                 ),
               ],
             ),
           ],
         ),
-        ViewAllChats()
       ],
     );
   }

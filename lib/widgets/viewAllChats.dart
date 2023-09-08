@@ -9,84 +9,113 @@ import 'package:flutter/material.dart';
 class ViewAllChats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print("hello");
-    return StreamBuilder<QuerySnapshot>(
-      stream: ChatHelper().cloud_rooms.snapshots(),
-      builder: (context, snapshot) {
-        print("here");
-        if (snapshot.data == null) {
-          print("imhere");
-          return Center(
-            child: Text("Aucun chats"),
-          );
-        } else {
-          List rooms = snapshot.data!.docs;
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Container(
+        // color: Colors.pink,
+        height: 350,
+        width: MediaQuery.of(context).size.width,
+        child: StreamBuilder<QuerySnapshot>(
+          stream: ChatHelper().cloud_rooms.snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.data == null) {
+              return Center(
+                child: Text("Aucun chats"),
+              );
+            } else {
+              List rooms = snapshot.data!.docs;
 
-          print("rooms");
-          print(rooms);
-          return ListView.builder(
-              shrinkWrap: true,
-              physics: ScrollPhysics(),
-              itemCount: rooms.length,
-              itemBuilder: (context, int index) {
-                final room = rooms[index];
+              return Row(
+                children: [
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: ScrollPhysics(),
+                        itemCount: rooms.length,
+                        itemBuilder: (context, int index) {
+                          final room = rooms[index];
 
-                if (isRoomMine(moi.uid, room.id)) {
-                  return FutureBuilder<List<Map<String, dynamic>>>(
-                    future: ChatHelper().getMessagesFromRoom(room.id),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData || snapshot.data == null) {
-                        return Center(
-                          child: Text("Loading messages..."),
-                        );
-                      } else {
-                        List<Map<String, dynamic>> messages = snapshot.data!;
+                          if (isRoomMine(moi.uid, room.id)) {
+                            return FutureBuilder<List<Map<String, dynamic>>>(
+                              future: ChatHelper().getMessagesFromRoom(room.id),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData ||
+                                    snapshot.data == null) {
+                                  return Center(
+                                    child: Text("Loading messages..."),
+                                  );
+                                } else {
+                                  List<Map<String, dynamic>> messages =
+                                      snapshot.data!;
 
-                        print(messages.first);
-                        return Container(
-                          margin: const EdgeInsets.only(top: 20),
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                  radius: 28,
-                                  backgroundImage:
-                                      NetworkImage(messages[0]["avatar"])),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      messages[0]["receiverName"],
-                                    ),
-                                    Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(messages.first["message"]),
-                                        ]),
-                                  ],
-                                ),
-                              ),
-                              Spacer(),
-                              // Add your unread count and time widgets here
-                            ],
-                          ),
-                        );
-                      }
-                    },
-                  );
-                } else {
-                  return SizedBox.shrink();
-                }
-              });
-        }
-      },
+                                  print(messages.first);
+                                  return Column(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.only(top: 20),
+                                        child: Row(
+                                          children: [
+                                            CircleAvatar(
+                                                radius: 28,
+                                                backgroundImage: NetworkImage(
+                                                    messages[0]["avatar"])),
+                                            SizedBox(
+                                              width: 20,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {},
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    messages[0]["receiverName"],
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 15),
+                                                  ),
+                                                  Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(messages
+                                                            .first["message"]),
+                                                      ]),
+                                                ],
+                                              ),
+                                            ),
+                                            Spacer(),
+                                            // Add your unread count and time widgets here
+                                          ],
+                                        ),
+                                      ),
+                                      Divider(
+                                        thickness: 0.5,
+                                        color:
+                                            Color.fromARGB(255, 214, 214, 214),
+                                      ),
+                                    ],
+                                  );
+                                }
+                              },
+                            );
+                          } else {
+                            return SizedBox.shrink();
+                          }
+                        }),
+                  ),
+                ],
+              );
+            }
+          },
+        ),
+      ),
     );
   }
 }

@@ -37,13 +37,15 @@ class _ChatPageState extends State<ChatPage> {
                     );
                   } else {
                     List documents = snap.data!.docs;
+                    String recentMessage;
                     return Stack(
                       children: [
                         GestureDetector(
                           onTap: () {
                             print("clicked");
-                            ChatHelper().sendChat(
-                                "hsshFfqedQWaj2laz3H9q9Ypal72", "hello");
+                            ChatHelper().sendChat("woIaXlVjOWwe1Q5vCKTP",
+                                "how can you do this to me...");
+                            setState(() {});
                           },
                           child: Container(
                             alignment: Alignment.topLeft,
